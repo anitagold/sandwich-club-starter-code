@@ -3,12 +3,15 @@ package com.udacity.sandwichclub;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 import com.udacity.sandwichclub.model.Sandwich;
 import com.udacity.sandwichclub.utils.JsonUtils;
+import java.util.List;
 
 public class DetailActivity extends AppCompatActivity {
 
@@ -36,6 +39,7 @@ public class DetailActivity extends AppCompatActivity {
 
         String[] sandwiches = getResources().getStringArray(R.array.sandwich_details);
         String json = sandwiches[position];
+
         Sandwich sandwich = JsonUtils.parseSandwichJson(json);
         if (sandwich == null) {
             // Sandwich data unavailable
@@ -43,7 +47,7 @@ public class DetailActivity extends AppCompatActivity {
             return;
         }
 
-        populateUI();
+        populateUI(sandwich);
         Picasso.with(this)
                 .load(sandwich.getImage())
                 .into(ingredientsIv);
@@ -56,7 +60,20 @@ public class DetailActivity extends AppCompatActivity {
         Toast.makeText(this, R.string.detail_error_message, Toast.LENGTH_SHORT).show();
     }
 
-    private void populateUI() {
+    private void populateUI(Sandwich sandwich) {
+        // find view by Id
+        TextView alsoKnownTv = findViewById(R.id.also_known_tv);
+        TextView placeOfOriginTv = findViewById(R.id.origin_tv);
+        TextView descriptionTv = findViewById(R.id.description_tv);
+        TextView ingredientsTv = findViewById(R.id.ingredients_tv);
+
+        String alsoKnownAs = TextUtils.join(", ", sandwich.getAlsoKnownAs());
+        String ingredients = TextUtils.join(", ", sandwich.getIngredients());
+
+        alsoKnownTv.setText(alsoKnownAs);
+        placeOfOriginTv.setText(sandwich.getPlaceOfOrigin());
+        descriptionTv.setText(sandwich.getDescription());
+        ingredientsTv.setText(ingredients);
 
     }
 }
